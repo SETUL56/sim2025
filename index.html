@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrepreneur Business Simulator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="screen active">
+        <div class="login-container">
+            <div class="login-box">
+                <h1>🚀 Entrepreneur Simulator</h1>
+                <p class="subtitle">Build. Launch. Compete.</p>
+                
+                <div id="loginForm">
+                    <input type="text" id="loginUsername" placeholder="Username" required>
+                    <input type="password" id="loginPassword" placeholder="Password" required>
+                    <button onclick="login()" class="btn btn-primary">Login</button>
+                    <p class="switch-form">
+                        Don't have an account? <a href="#" onclick="showRegister()">Register</a>
+                    </p>
+                </div>
+                
+                <div id="registerForm" style="display: none;">
+                    <input type="text" id="registerName" placeholder="Full Name" required>
+                    <input type="text" id="registerUsername" placeholder="Username" required>
+                    <input type="password" id="registerPassword" placeholder="Password" required>
+                    <button onclick="register()" class="btn btn-primary">Create Account</button>
+                    <p class="switch-form">
+                        Already have an account? <a href="#" onclick="showLogin()">Login</a>
+                    </p>
+                </div>
+                
+                <div class="demo-credentials">
+                    <h4>Demo Accounts:</h4>
+                    <p><strong>Teacher:</strong> teacher / teacher123</p>
+                    <p><strong>Students:</strong> student1 / student1, student2 / student2</p>
+                    <button onclick="testConnection()" class="btn btn-info" style="margin-top: 10px; font-size: 12px; padding: 8px 16px;">
+                        🔧 Test Server Connection
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Dashboard -->
+    <div id="studentScreen" class="screen">
+        <header class="main-header">
+            <div class="header-content">
+                <h1>🚀 Entrepreneur Simulator</h1>
+                <div class="user-info">
+                    <span class="balance" id="studentBalance">💰 Balance: $0</span>
+                    <span class="user-name" id="studentName">Student</span>
+                    <button onclick="logout()" class="btn btn-secondary">Logout</button>
+                </div>
+            </div>
+            <nav class="main-nav">
+                <button onclick="showStudentSection('myBusiness')" class="nav-btn active">My Business</button>
+                <button onclick="showStudentSection('marketplace')" class="nav-btn">Marketplace</button>
+                <button onclick="showStudentSection('trading')" class="nav-btn">Trading</button>
+                <button onclick="showStudentSection('portfolio')" class="nav-btn">Portfolio</button>
+            </nav>
+        </header>
+
+        <!-- Student Sections -->
+        <div class="container">
+            <!-- My Business Section -->
+            <section id="student-myBusiness" class="section active">
+                <div id="noBusiness" class="empty-state">
+                    <h2>Start Your Business Journey</h2>
+                    <p>You haven't created a business yet. Launch your first venture now!</p>
+                    <button onclick="showCreateBusiness()" class="btn btn-primary btn-large">
+                        🚀 Create Your Business
+                    </button>
+                </div>
+
+                <div id="businessDashboard" style="display: none;">
+                    <div class="dashboard-header">
+                        <h2 id="businessTitle"></h2>
+                        <button onclick="showCreateBusiness()" class="btn btn-secondary">Edit Business</button>
+                    </div>
+                    
+                    <div class="stats-grid" id="businessStats"></div>
+                    
+                    <div class="products-section">
+                        <div class="section-header">
+                            <h3>Products & Services</h3>
+                            <button onclick="showAddProduct()" class="btn btn-primary">+ Add Product</button>
+                        </div>
+                        <div id="productsList" class="products-grid"></div>
+                    </div>
+                    
+                    <div class="section-header">
+                        <h3>Recent Sales</h3>
+                    </div>
+                    <div id="recentSales"></div>
+                </div>
+            </section>
+
+            <!-- Marketplace Section -->
+            <section id="student-marketplace" class="section">
+                <h2>Global Marketplace</h2>
+                
+                <div class="filters">
+                    <input type="text" id="marketSearch" placeholder="🔍 Search businesses..." class="search-box">
+                    <select id="marketCategory" class="filter-select">
+                        <option value="">All Categories</option>
+                        <option value="technology">Technology</option>
+                        <option value="retail">Retail</option>
+                        <option value="food">Food & Beverage</option>
+                        <option value="services">Services</option>
+                        <option value="fashion">Fashion</option>
+                        <option value="health">Health & Wellness</option>
+                        <option value="education">Education</option>
+                        <option value="entertainment">Entertainment</option>
+                        <option value="finance">Finance</option>
+                        <option value="trading">Stock/Crypto Trading</option>
+                    </select>
+                    <button onclick="loadMarketplace()" class="btn btn-secondary">Refresh</button>
+                </div>
+                
+                <div id="marketplaceGrid" class="business-grid"></div>
+            </section>
+
+            <!-- Trading Section -->
+            <section id="student-trading" class="section">
+                <h2>Stock & Crypto Trading</h2>
+                
+                <div class="trading-tabs">
+                    <button onclick="showTradingTab('stocks')" class="tab-btn active">📈 Stocks</button>
+                    <button onclick="showTradingTab('crypto')" class="tab-btn">₿ Cryptocurrency</button>
+                </div>
+                
+                <div id="stocksTab" class="trading-tab active">
+                    <div id="stocksList" class="trading-list"></div>
+                </div>
+                
+                <div id="cryptoTab" class="trading-tab">
+                    <div id="cryptoList" class="trading-list"></div>
+                </div>
+            </section>
+
+            <!-- Portfolio Section -->
+            <section id="student-portfolio" class="section">
+                <h2>My Portfolio</h2>
+                
+                <div class="stats-grid" id="portfolioStats"></div>
+                
+                <h3>Holdings</h3>
+                <div id="holdingsList"></div>
+                
+                <h3>Transaction History</h3>
+                <div id="transactionHistory"></div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Teacher Dashboard -->
+    <div id="teacherScreen" class="screen">
+        <header class="main-header teacher-header">
+            <div class="header-content">
+                <h1>👨‍💼 Teacher Admin Dashboard</h1>
+                <div class="user-info">
+                    <span class="user-name" id="teacherName">Teacher</span>
+                    <button onclick="logout()" class="btn btn-secondary">Logout</button>
+                </div>
+            </div>
+            <nav class="main-nav">
+                <button onclick="showTeacherSection('overview')" class="nav-btn active">Overview</button>
+                <button onclick="showTeacherSection('students')" class="nav-btn">Students</button>
+                <button onclick="showTeacherSection('businesses')" class="nav-btn">Businesses</button>
+                <button onclick="showTeacherSection('transactions')" class="nav-btn">Transactions</button>
+            </nav>
+        </header>
+
+        <div class="container">
+            <!-- Overview Section -->
+            <section id="teacher-overview" class="section active">
+                <h2>Simulation Overview</h2>
+                
+                <div class="stats-grid large" id="adminStats"></div>
+                
+                <div class="action-buttons">
+                    <button onclick="exportReport()" class="btn btn-primary">📊 Export Report</button>
+                    <button onclick="refreshData()" class="btn btn-secondary">🔄 Refresh Data</button>
+                    <button onclick="resetSimulation()" class="btn btn-danger">⚠️ Reset Simulation</button>
+                </div>
+                
+                <h3>Top Performing Businesses</h3>
+                <div id="leaderboard"></div>
+            </section>
+
+            <!-- Students Section -->
+            <section id="teacher-students" class="section">
+                <h2>Student Activity</h2>
+                <div id="studentsList"></div>
+            </section>
+
+            <!-- Businesses Section -->
+            <section id="teacher-businesses" class="section">
+                <h2>All Businesses</h2>
+                <div id="allBusinesses"></div>
+            </section>
+
+            <!-- Transactions Section -->
+            <section id="teacher-transactions" class="section">
+                <h2>All Transactions</h2>
+                <div id="allTransactions"></div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Business Landing Page Modal -->
+    <div id="businessLandingModal" class="modal">
+        <div class="modal-overlay" onclick="closeBusinessLanding()"></div>
+        <div class="modal-content large">
+            <button onclick="closeBusinessLanding()" class="close-btn">×</button>
+            <div id="businessLandingContent"></div>
+        </div>
+    </div>
+
+    <!-- Create/Edit Business Modal -->
+    <div id="businessFormModal" class="modal">
+        <div class="modal-overlay" onclick="closeBusinessForm()"></div>
+        <div class="modal-content">
+            <button onclick="closeBusinessForm()" class="close-btn">×</button>
+            <h2>Create Your Business</h2>
+            <form id="businessForm" onsubmit="saveBusiness(event)">
+                <div class="form-group">
+                    <label>Business Name *</label>
+                    <input type="text" id="bizName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Category *</label>
+                    <select id="bizCategory" required>
+                        <option value="">Select category</option>
+                        <option value="technology">Technology</option>
+                        <option value="retail">Retail</option>
+                        <option value="food">Food & Beverage</option>
+                        <option value="services">Services</option>
+                        <option value="fashion">Fashion</option>
+                        <option value="health">Health & Wellness</option>
+                        <option value="education">Education</option>
+                        <option value="entertainment">Entertainment</option>
+                        <option value="finance">Finance</option>
+                        <option value="trading">Stock/Crypto Trading</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Description *</label>
+                    <textarea id="bizDescription" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Tagline</label>
+                    <input type="text" id="bizTagline">
+                </div>
+                
+                <div class="form-group">
+                    <label>Brand Color *</label>
+                    <div class="color-picker">
+                        <div class="color-option selected" data-color="#667eea"></div>
+                        <div class="color-option" data-color="#f093fb"></div>
+                        <div class="color-option" data-color="#4facfe"></div>
+                        <div class="color-option" data-color="#43e97b"></div>
+                        <div class="color-option" data-color="#fa709a"></div>
+                        <div class="color-option" data-color="#30cfd0"></div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-large">🚀 Launch Business</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div id="productFormModal" class="modal">
+        <div class="modal-overlay" onclick="closeProductForm()"></div>
+        <div class="modal-content">
+            <button onclick="closeProductForm()" class="close-btn">×</button>
+            <h2>Add Product/Service</h2>
+            <form id="productForm" onsubmit="saveProduct(event)">
+                <div class="form-group">
+                    <label>Product/Service Name *</label>
+                    <input type="text" id="productName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Description *</label>
+                    <textarea id="productDescription" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Price ($) *</label>
+                    <input type="number" id="productPrice" step="0.01" min="0.01" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="productCategory">
+                        <option value="product">Product</option>
+                        <option value="service">Service</option>
+                        <option value="digital">Digital</option>
+                        <option value="subscription">Subscription</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-large">Add to Business</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
